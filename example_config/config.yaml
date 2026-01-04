@@ -1,0 +1,17 @@
+- dev_name: virtual-gpio0
+  live: true
+  banks:
+    - chip_name: virtual-bank0
+      num_lines: 3
+      lines:
+        - name: line0
+          valid: true
+        - name: line1
+          valid: true
+        - name: line2
+          valid: false
+    - chip_name: virtual-bank1
+      num_lines: 1
+      lines:
+        - name: line0
+          valid: true
