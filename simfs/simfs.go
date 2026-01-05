@@ -7,6 +7,11 @@ import (
 	"golang.org/x/sys/unix"
 )
 
+const (
+	BASE_PATH     = "/sys/kernel/config"
+	GPIO_SIM_PATH = BASE_PATH + "/gpio-sim"
+)
+
 func CheckInit() error {
 	_, err := os.Stat(BASE_PATH)
 	if err != nil {
@@ -26,24 +31,22 @@ func CheckInit() error {
 	return nil
 }
 
-func Cleanup() error {
-	err := os.RemoveAll(GPIO_SIM_PATH)
-	if err != nil {
-		return fmt.Errorf("Failed to clean up gpio-sim configfs entries: %w", err)
-	}
-	return nil
-}
-
-func Initialize(devices []Device) error {
-	for idx, device := range devices {
-		err := device.Create()
+func Cleanup(devices []Device) error {
+	for _, device := range devices {
+		err := device.Delete()
 		if err != nil {
-			return fmt.Errorf("Failed to create %dth device: %s", idx, err.Error())
+			return fmt.Errorf("Failed to clean up gpio-sim device %s: %s", device.DevName, err.Error())
 		}
 	}
 	return nil
 }
 
-func (device Device) Create() error {
+func Initialize(devices []Device) error {
+	for _, device := range devices {
+		err := device.Create()
+		if err != nil {
+			return fmt.Errorf("Failed to create device %s: %s", device.DevName, err.Error())
+		}
+	}
 	return nil
 }

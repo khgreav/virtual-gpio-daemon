@@ -54,7 +54,7 @@ func main() {
 	}
 	err = simfs.Initialize(devices)
 	if err != nil {
-		simfs.Cleanup()
+		simfs.Cleanup(devices)
 		fmt.Fprintf(os.Stderr, "%s", err.Error())
 		os.Exit(1)
 	}
@@ -69,7 +69,7 @@ func main() {
 		sig := <-signals
 		switch sig {
 		case syscall.SIGINT, syscall.SIGTERM:
-			err := simfs.Cleanup()
+			err := simfs.Cleanup(devices)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%s", err.Error())
 				os.Exit(1)
